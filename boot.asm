@@ -6,26 +6,26 @@
 	
 	; FAT-DATEISYSTEMINFORMATIONEN (BIOS Parameter Block)
 	ORG 7C03h
-	bpbOemName				db "TigeR OS"	; OEM Name (8 Byte)
-	bpbBytesPerSector		dw 512			; Bytes pro Sektor
-	bpbSectorsPerCluster	db 1			; Sektoren pro Cluster
-	bpbReserved				dw 1			; Reservierte Sektoren
-	bpbFatCount				db 2			; Anzahl der File Allocation Tables
-	bpbMaxRootDirEntries	dw 224			; Max. Einträge im Stammverzeichnis
-	bpbSectorCount			dw 2880			; Gesamtzahl der Sektoren
-	bpbMediaDescriptor		db 0F0h			; Media Descriptor (3.5" 1.44Mb)
-	bpbSectorsPerFat		dw 9			; Anzahl der Sektoren per FAT
-	bpbSectorsPerTrack		dw 18			; Sektoren per Track
-	bpbHeadCount			dw 2			; Anzahl Lese-/Schreibköpfe
-	bpbHiddenSectors		dd 0			; Versteckte Sektoren vor Partition
-	bpbSectorCountBig		dd 0			; Gesamtzahl der Sektoren
+	bpbOemName           db "TigeR OS"    ; OEM Name (8 Byte)
+	bpbBytesPerSector    dw 512           ; Bytes pro Sektor
+	bpbSectorsPerCluster db 1             ; Sektoren pro Cluster
+	bpbReserved          dw 1             ; Reservierte Sektoren
+	bpbFatCount          db 2             ; Anzahl der File Allocation Tables
+	bpbMaxRootDirEntries dw 224           ; Max. Einträge im Stammverzeichnis
+	bpbSectorCount       dw 2880          ; Gesamtzahl der Sektoren
+	bpbMediaDescriptor   db 0F0h          ; Media Descriptor (3.5" 1.44Mb)
+	bpbSectorsPerFat     dw 9             ; Anzahl der Sektoren per FAT
+	bpbSectorsPerTrack   dw 18            ; Sektoren per Track
+	bpbHeadCount         dw 2             ; Anzahl Lese-/Schreibköpfe
+	bpbHiddenSectors     dd 0             ; Versteckte Sektoren vor Partition
+	bpbSectorCountBig    dd 0             ; Gesamtzahl der Sektoren
 	
-	bpbDriveNumber			db 0			; Physische BIOS-Laufwerksnummer
-							db 0			; Reserviert
-	bpbExtBootSignature		db 29h			; Erweiterte Bootsignatur
-	bpbSerialNumber			dd 0			; ID / Seriennummer
-	bpbVolumeLabel			db "TigeR OS   "; Dateisystemname (11 Bytes)
-	bpbFileSystem			db "FAT12   "	; FAT-Variante (8 Bytes)
+	bpbDriveNumber       db 0             ; Physische BIOS-Laufwerksnummer
+	                     db 0             ; Reserviert
+	bpbExtBootSignature  db 29h           ; Erweiterte Bootsignatur
+	bpbSerialNumber      dd 0             ; ID / Seriennummer
+	bpbVolumeLabel       db "TigeR OS   " ; Dateisystemname (11 Bytes)
+	bpbFileSystem        db "FAT12   "    ; FAT-Variante (8 Bytes)
 	
 	; BOOTLOADER CODE
 ; IN DS:SI = Stringadresse (Nullterminiert)
@@ -59,8 +59,8 @@ _print_str_ende:
 stage1_print_str ENDP
 
 stage1_error_halt:
-	cli		; Interrupts stoppen
-	hlt		; CPU anhalten
+	cli ; Interrupts stoppen
+	hlt ; CPU anhalten
 	
 stage1:
 	; Bootmeldung anzeigen
@@ -86,18 +86,18 @@ stage1_floppy_reset:
 	push AX
 	
 	; Stammverzeichnislänge
-	mov AX, 32	; Größe eines Verzeichniseintrags
+	mov AX, 32 ; Größe eines Verzeichniseintrags
 	mul bpbMaxRootDirEntries
 	div bpbBytesPerSector
 	
 	pop CX
 	
-	mov AH, 2h	; Funktionsnummer
-				; AL Anzahl zu lesender Sektoren
-	mov CH, 0	; Zylindernummer
-				; CL Sektornummer
-	mov DH, 0	; Lesekopfnummer
-	mov DL, 0	; Laufwerksnummer
+	mov AH, 2h ; Funktionsnummer
+	           ; AL Anzahl zu lesender Sektoren
+	mov CH, 0  ; Zylindernummer
+	           ; CL Sektornummer
+	mov DH, 0  ; Lesekopfnummer
+	mov DL, 0  ; Laufwerksnummer
 	
 	mov BX, 7E00h	; Zieladresse
 	mov ES, BX
